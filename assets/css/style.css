@@ -76,3 +76,13 @@ body {
 .footer .link a:hover {
   color: #0d6efd;
 }
+
+/* About Us Image */
+.about-image {
+  width: 300px !important;
+  height: 300px !important;
+  aspect-ratio: 1 / 1;
+  border-radius: 50% !important;
+  object-fit: cover;
+  display: block;
+}
