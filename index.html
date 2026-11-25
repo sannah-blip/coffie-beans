@@ -592,6 +592,26 @@
       </div>
     </footer>
 
+    <!-- Chatbot FAQ -->
+    <div class="chat-widget">
+      <div id="chatPanel" class="chat-panel shadow" hidden>
+        <div class="chat-header d-flex align-items-center justify-content-between p-3">
+          <span class="fw-bold">Chat Coffee Beans</span>
+          <button type="button" class="btn-close btn-close-white" id="chatClose" aria-label="Tutup chat"></button>
+        </div>
+        <div id="chatMessages" class="chat-messages p-3" role="log" aria-live="polite">
+          <div class="chat-message chat-bot">Halo! Saya Coffee Bot 👋 Asisten Coffee Beans. Saya bisa bantu soal layanan, biji kopi, rasa, harga, jam buka, dan kontak. Ada yang ingin ditanyakan?</div>
+        </div>
+        <form id="chatForm" class="chat-form p-2 d-flex gap-2">
+          <input id="chatInput" type="text" class="form-control form-control-sm" placeholder="Tulis pertanyaan..." aria-label="Pertanyaan" autocomplete="off" required />
+          <button type="submit" class="btn btn-success btn-sm px-3">Kirim</button>
+        </form>
+      </div>
+      <button type="button" id="chatToggle" class="chat-toggle btn btn-success rounded-circle shadow" aria-label="Buka chat" aria-controls="chatPanel" aria-expanded="false">
+        <i class="bi bi-chat-dots"></i>
+      </button>
+    </div>
+
     <!-- Popper and Bootstrap JS -->
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
@@ -618,6 +638,164 @@
           contactForm.reset();
         });
       }
+
+      const chatToggle = document.getElementById("chatToggle");
+      const chatPanel = document.getElementById("chatPanel");
+      const chatClose = document.getElementById("chatClose");
+      const chatForm = document.getElementById("chatForm");
+      const chatInput = document.getElementById("chatInput");
+      const chatMessages = document.getElementById("chatMessages");
+
+      function toggleChat(open) {
+        chatPanel.hidden = !open;
+        chatToggle.setAttribute("aria-expanded", String(open));
+        chatToggle.setAttribute("aria-label", open ? "Tutup chat" : "Buka chat");
+      }
+      chatToggle.addEventListener("click", () => toggleChat(chatPanel.hidden));
+      chatClose.addEventListener("click", () => {
+        toggleChat(false);
+        chatToggle.focus();
+      });
+
+      const chatAnswers = [
+        {
+          match: /roast|tingkat kematangan|sangrai ringan|light|medium|dark/,
+          text: "Tingkat kematangan sangrai bisa disesuaikan, dari yang ringan sampai lebih gelap. Mau saya bantu pilih sesuai rasa yang kamu suka?"
+        },
+        {
+          match: /layanan|sangrai|penggilingan|kemas/,
+          text: "Layanan kami: penyangraian, penggilingan, dan pengemasan biji kopi. Tiap tahap dijaga supaya aroma dan kesegarannya tetap terjaga. Ada yang mau ditanyakan lebih lanjut?"
+        },
+        {
+          match: /rekomendasi|sarankan|pilih yang mana|mana yang enak|paling enak|favorit|laris|terbaik/,
+          text: "Kalau mau yang aromatik dan ringan, saya sarankan Arabika Gayo atau Wamena Papua. Kalau suka yang kuat, Robusta Lampung pilihan yang pas. Mau saya jelaskan rasa salah satunya?"
+        },
+        {
+          match: /rasa|enak|manis|pahit|asam|floral|cokelat|sitrus|buah|body|tekstur/,
+          text: "Kalau suka floral dan citrus, coba Arabika Gayo atau Wamena Papua. Yang kuat dan pahit ada Robusta Lampung. Mandheling bodynya tebal, Kintamani cerah, Flores manis buah."
+        },
+        {
+          match: /proses|pengolahan|kualitas|kesegaran|segar|higienis|aroma/,
+          text: "Kami mengolah biji kopi pilihan dengan sangrai presisi, penggilingan sesuai metode seduh, dan pengemasan higienis untuk menjaga aroma, rasa, dan kesegaran."
+        },
+        {
+          match: /bedanya|perbedaan|arabika.*robusta|robusta.*arabika/,
+          text: "Arabika biasanya lebih aromatik dengan asam lembut, seperti Gayo yang floral dan Kintamani yang cerah. Robusta kafeinnya lebih tinggi, rasanya kuat dan pahit khas, cocok untuk espresso."
+        },
+        {
+          match: /seduh|espresso|manual|v60|tubruk|brewing|gilingan|utuh|giling atau utuh/,
+          text: "Bisa biji utuh atau digiling sesuai metode seduh. Untuk espresso, Robusta Lampung cocok; seduh manual cocok dengan Kintamani Bali. Tingkat kehalusannya bisa disesuaikan, dari kasar sampai halus."
+        },
+        {
+          match: /biji|jenis|ragam|arabika|robusta|gayo|lampung|kintamani|mandheling|flores|wamena/,
+          text: "Biji kopi pilihan kami: Arabika Gayo, Robusta Lampung, Kintamani Bali, Mandheling Sumatera, Flores Bajawa, dan Wamena Papua. Mau saya ceritakan rasa salah satunya?"
+        },
+        {
+          match: /instagram|\big\b|marketplace|tokopedia|shopee|sosial media|dm\b/,
+          text: "Kanal pemesanan yang tercantum di website adalah WhatsApp dan form Kontak. Untuk lewat Instagram/marketplace, tanya langsung ke WA 6285802130953 ya."
+        },
+        {
+          match: /katalog|foto produk|gambar produk|brochure|detail produk/,
+          text: "Detail biji kopi ada di bagian Kenali Biji Kami di website. Untuk katalog atau foto lebih lengkap, silakan chat WA 6285802130953 ya."
+        },
+        {
+          match: /pesan|harga|beli|order|preorder|kirim|ongkir|pengiriman|promo|diskon|grosir|reseller|borong|cod|bayar|pembayaran|nego|tawar|murah|termurah|mahal|budget|uang|transfer|rekening|kafe|coffee shop|restoran|bisnis|kerja sama|mitra|kemitraan/,
+          text: "Untuk pesan, harga, budget, promo/grosir, nego, kerja sama, pembayaran, atau pengiriman, hubungi WhatsApp 6285802130953 atau kirim pesan lewat form Kontak ya 😊"
+        },
+        {
+          match: /jam|buka|operasional|tutup|kapan|senin|sabtu|minggu|weekend|24 jam|kapan saja/,
+          text: "Jam kerja tim kami Senin - Sabtu, 09.00 AM - 16.00 PM. Saya sendiri bisa dipakai kapan saja kok!"
+        },
+        {
+          match: /alamat|lokasi|dimana|di mana|tempat|datang|kunjungi|showroom|toko/,
+          text: "Kami berada di Salatiga City, Jawa Tengah. Peta lokasinya ada di bagian Contact di website."
+        },
+        {
+          match: /kontak|hubungi|whatsapp|wa\b|email|telepon|nomor/,
+          text: "Hubungi kami via WhatsApp 6285802130953 atau email coffiebeans@gmail.com. Ada juga form Kontak di website."
+        },
+        {
+          match: /halal|sertifikat|izin|legal/,
+          text: "Untuk informasi halal atau sertifikasi produk, silakan konfirmasi langsung ke WhatsApp 6285802130953 ya."
+        },
+        {
+          match: /stok|tersedia|ready|sampel|contoh|trial/,
+          text: "Untuk ketersediaan stok atau permintaan sampel, silakan konfirmasi ke WhatsApp 6285802130953 ya."
+        },
+        {
+          match: /garansi|retur|komplain|rusak|tidak sesuai/,
+          text: "Kalau ada kendala dengan produk, langsung hubungi WhatsApp 6285802130953 ya, nanti kami bantu cek."
+        },
+        {
+          match: /decaf|kafein rendah|susu|latte|cappuccino|siap minum|minuman/,
+          text: "Kami fokus mengolah biji kopi, bukan minuman siap minum. Untuk kebutuhan decaf atau olahan khusus, tanya WA 6285802130953 ya."
+        },
+        {
+          match: /tentang kami|profil|perusahaan|coffee beans|dari mana/,
+          text: "Coffee Beans mengolah biji kopi pilihan dari sangrai sampai pengemasan supaya aroma, rasa, dan kesegarannya terjaga sampai ke tangan kamu."
+        },
+        {
+          match: /^(maksudnya|kurang jelas|apa maksudmu|gimana)\b(?!.*kabar)/,
+          text: "Maksudnya bisa dijelaskan sedikit lagi? Saya siap bantu soal layanan, biji kopi, rasa, harga, jam buka, alamat, atau kontak ☕"
+        },
+        {
+          match: /^(hallo|halo|hay|hai|hi|hello|assalamu ?alaikum|selamat (pagi|siang|sore|malam|datang))\b/,
+          text: "Halo! Senang ngobrol sama kamu 😊 Ada yang bisa saya bantu soal kopi hari ini?"
+        },
+        {
+          match: /siapa (kamu|anda)|kamu siapa|nama (kamu|anda)|siapa sih kamu|coffee bot|robot|manusia|kamu orang/,
+          text: "Saya Coffee Bot, asisten virtual Coffee Beans. Saya bantu jawab soal layanan, biji kopi, rasa, harga, jam buka, alamat, dan kontak."
+        },
+        {
+          match: /english|inggris|can you speak|do you speak/,
+          text: "Saya lebih nyaman menjawab dalam bahasa Indonesia 😊 Kalau perlu, saya bisa bantu arahkan pertanyaanmu ke tim kami via WhatsApp."
+        },
+        {
+          match: /bisa apa|bantu apa|fitur|menu|fungsi (kamu|anda)|tolong|bantu saya|apa saja yang bisa/,
+          text: "Saya bisa bantu: layanan, jenis & rasa biji kopi, metode seduh, harga/pemesanan, jam buka, alamat, dan kontak. Mau mulai dari mana?"
+        },
+        {
+          match: /apa kabar|kabar|gimana kabarnya|lagi apa/,
+          text: "Kabar baik! Siap nemenin kamu cari info kopi ☕ Ada yang mau ditanyakan?"
+        },
+        {
+          match: /^(oke|ok|sip|iya|ya|oh gitu|begitu|mantap)\b/,
+          text: "Siap! Ada lagi yang ingin kamu tanyakan?"
+        },
+        {
+          match: /terima kasih|makasih|thanks|thx/,
+          text: "Sama-sama! Senang bisa membantu 😊 Ada lagi yang bisa saya bantu?"
+        },
+        {
+          match: /sampai jumpa|sampai nanti|bye|dadah|pulang dulu|saya pergi|chat lagi|nanti saja/,
+          text: "Sampai jumpa! Kalau butuh info kopi lagi, chat saya kapan saja 👋"
+        }
+      ];
+
+      function addChatMessage(text, who) {
+        const message = document.createElement("div");
+        message.className = "chat-message chat-" + who;
+        message.textContent = text;
+        chatMessages.appendChild(message);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      chatForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const question = chatInput.value.trim();
+        if (!question) return;
+        addChatMessage(question, "user");
+        const lower = question.toLowerCase();
+        const answer = chatAnswers.find((item) => item.match.test(lower));
+        addChatMessage(
+          answer
+            ? answer.text
+            : "Belum ada jawaban persisnya, tapi saya bisa bantu soal layanan, biji kopi, rekomendasi rasa, harga/pemesanan, jam buka, alamat, dan kontak. Coba tanya dengan kata lain, atau langsung chat WA 6285802130953 ya 😊",
+          "bot"
+        );
+        chatInput.value = "";
+        chatInput.focus();
+      });
     </script>
   </body>
 </html>
